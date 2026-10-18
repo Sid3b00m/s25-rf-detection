@@ -147,9 +147,29 @@ explanation rather than writing a file full of blank coordinates.
 
 Two defaults worth knowing:
 
-**Randomized BLE addresses are dropped.** Anything whose `address_type` is not public is a
-rotating MAC that will never be seen again, so it is noise in a database keyed on MAC. Pass
-`-KeepRandomAddresses` to include them anyway.
+**Randomized addresses are dropped.** A rotating MAC will never be seen again, so it is noise in
+a database keyed on MAC. Pass `-KeepRandomAddresses` to include them anyway.
+
+How a randomized address is identified depends on the export. The session CSV carries an
+`address_type` column — RF Sentinel's own classification — and that is used directly. The match
+log and trip exports have no such column, so the address is classified from its own bits:
+
+- **The locally-administered bit** (bit 1 of the first octet) is set. No IEEE assignment ever
+  sets it, so this is proof the address was generated rather than issued. In practice it means
+  the second hex digit is `2`, `6`, `A` or `E`.
+- **For BLE only**, the top two bits of the first octet give the random subtype — `11` static,
+  `01` resolvable private, `00` non-resolvable private, `10` reserved. But a *public* BLE address
+  can hold any value there, so this test only decides the question when the OUI is also absent
+  from the IEEE registry.
+
+That second test needs a registry, so the script loads `ieee\manuf` if it sits next to the
+script, or whatever you pass to `-OuiFile`. Without one it says so and falls back to the
+locally-administered bit alone, which will let through a BLE random address that happens to
+leave that bit clear. Same file [`verify-ouis.ps1`](verify-ouis.ps1) uses:
+
+```powershell
+iwr https://www.wireshark.org/download/automated/data/manuf -OutFile ieee\manuf
+```
 
 **Missing columns are left empty, not invented.** RF Sentinel does not record AuthMode, channel
 or altitude, so those stay blank — WiGLE accepts the rows but ranks sparse ones lower. The

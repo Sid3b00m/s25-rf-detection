@@ -22,8 +22,17 @@
     Limit output to one radio. BLE and WiFi rows are both valid WiGLE submissions.
 
 .PARAMETER KeepRandomAddresses
-    By default, BLE devices whose address_type is not public are dropped. Those MACs are
-    rotated by the device and are meaningless as persistent WiGLE observations.
+    By default, randomized addresses are dropped. Those MACs are rotated by the device and are
+    meaningless as persistent WiGLE observations. The session export reports an address_type
+    and that is used directly; the match log and trip exports do not, so the address is
+    classified from its own bits instead - see -OuiFile.
+
+.PARAMETER OuiFile
+    Optional path to a Wireshark-style `manuf` file. Without it, randomized addresses are
+    detected by the locally-administered bit alone, which is decisive but incomplete for BLE:
+    a BLE random address is only required to set the top two bits, so one that leaves the
+    locally-administered bit clear can only be identified by its OUI being absent from the
+    IEEE registry. Supply the registry to catch those too.
 
 .PARAMETER AssumeAccuracyMeters
     Writes a fixed AccuracyMeters for every row. Only use this if you know roughly what your
@@ -46,6 +55,8 @@ param(
     [string] $Radio = 'All',
 
     [switch] $KeepRandomAddresses,
+
+    [string] $OuiFile,
 
     [double] $AssumeAccuracyMeters = -1,
 
@@ -114,12 +125,77 @@ function Get-RadioTypes([string] $raw) {
     return $t
 }
 
+# --- IEEE registry, optional -------------------------------------------------------------
+$registry = $null
+if (-not $OuiFile) {
+    $local = Join-Path (Split-Path -Parent $PSCommandPath) 'ieee\manuf'
+    if (Test-Path -LiteralPath $local) { $OuiFile = $local }
+}
+if ($OuiFile) {
+    if (-not (Test-Path -LiteralPath $OuiFile)) { throw "No such OUI file: $OuiFile" }
+    $registry = @{}
+    foreach ($line in [IO.File]::ReadLines((Resolve-Path $OuiFile))) {
+        if ($line.StartsWith('#') -or -not $line.Trim()) { continue }
+        $p = $line -split "`t"
+        if ($p.Count -lt 2) { continue }
+        $a = $p[0].Trim(); $bits = 24
+        if ($a -match '^(.*)/(\d+)$') { $a = $Matches[1]; $bits = [int]$Matches[2] }
+        $h = ($a -replace '[^0-9A-Fa-f]', '').ToUpperInvariant()
+        $keep = [int][Math]::Ceiling($bits / 4)
+        if ($h.Length -lt $keep) { continue }
+        $k = $h.Substring(0, $keep)
+        if (-not $registry.ContainsKey($k)) { $registry[$k] = $true }
+    }
+    Write-Host "Registry : $OuiFile ($($registry.Count) assignments)"
+} else {
+    Write-Host "Registry : none - BLE random addresses that leave the locally-administered" -ForegroundColor DarkYellow
+    Write-Host "           bit clear cannot be told from public ones and will be kept." -ForegroundColor DarkYellow
+    Write-Host "           Fetch one with:" -ForegroundColor DarkYellow
+    Write-Host "             iwr https://www.wireshark.org/download/automated/data/manuf -OutFile ieee\manuf"
+}
+
+function Test-Registered([string] $hex) {
+    if (-not $registry) { return $false }
+    for ($len = 12; $len -ge 6; $len--) {
+        if ($hex.Length -lt $len) { continue }
+        if ($registry.ContainsKey($hex.Substring(0, $len))) { return $true }
+    }
+    return $false
+}
+
+function Get-MacClass {
+    param([string] $Hex, [string] $Type)
+
+    $b0 = [Convert]::ToInt32($Hex.Substring(0, 2), 16)
+
+    # No IEEE assignment ever sets the locally-administered bit, so this alone is proof the
+    # address was generated rather than issued. Holds for WiFi and Bluetooth alike.
+    if ($b0 -band 0x02) { return 'random' }
+
+    if ($Type -eq 'W') { return 'public' }
+
+    # A BLE random address only has to set the top two bits; the locally-administered bit is
+    # unconstrained. So an unregistered OUI is what separates the remaining random addresses
+    # from genuine public ones, and without the registry they are indistinguishable.
+    if ($registry -and -not (Test-Registered $Hex)) {
+        switch ($b0 -shr 6) {
+            3 { return 'random' }   # 11 static
+            1 { return 'random' }   # 01 resolvable private
+            0 { return 'random' }   # 00 non-resolvable private
+            2 { return 'reserved' } # 10 invalid per spec
+        }
+    }
+    return 'public'
+}
+
 $skip = [ordered]@{
-    'no coordinates'       = 0
-    'randomized BLE MAC'   = 0
-    'unknown radio'        = 0
-    'filtered by -Radio'   = 0
-    'malformed MAC'        = 0
+    'no coordinates'           = 0
+    'randomized, reported'     = 0
+    'randomized, from bits'    = 0
+    'reserved address bits'    = 0
+    'unknown radio'            = 0
+    'filtered by -Radio'       = 0
+    'malformed MAC'            = 0
 }
 
 $out = New-Object System.Collections.Generic.List[string]
@@ -138,12 +214,17 @@ foreach ($r in $rows) {
     $types = Get-RadioTypes $r.$radioCol
     if ($types.Count -eq 0) { $skip['unknown radio']++ ; continue }
 
-    # Rotated BLE addresses are not stable identifiers and pollute the database.
-    if (-not $KeepRandomAddresses -and $shape -eq 'session') {
-        if ($r.address_type -and $r.address_type -notmatch '(?i)public') {
-            $skip['randomized BLE MAC']++ ; continue
-        }
+    # Rotated addresses are not stable identifiers and pollute a database keyed on MAC.
+    # Prefer what the app reported; fall back to classifying the address itself.
+    $reported = $null
+    if ($cols -contains 'address_type' -and -not [string]::IsNullOrWhiteSpace($r.address_type)) {
+        $reported = $r.address_type
     }
+    if (-not $KeepRandomAddresses -and $reported -and $reported -notmatch '(?i)public') {
+        $skip['randomized, reported']++ ; continue
+    }
+
+    $hex = $mac -replace ':', ''
 
     $rssi = if (-not [string]::IsNullOrWhiteSpace($r.rssi)) { $r.rssi }
             elseif ($cols -contains 'best_rssi')            { $r.best_rssi }
@@ -154,6 +235,12 @@ foreach ($r in $rows) {
     foreach ($t in $types) {
         if ($Radio -eq 'WiFi'      -and $t -ne 'W') { $skip['filtered by -Radio']++ ; continue }
         if ($Radio -eq 'Bluetooth' -and $t -eq 'W') { $skip['filtered by -Radio']++ ; continue }
+
+        if (-not $KeepRandomAddresses -and -not $reported) {
+            $cls = Get-MacClass -Hex $hex -Type $t
+            if ($cls -eq 'random')   { $skip['randomized, from bits']++ ; continue }
+            if ($cls -eq 'reserved') { $skip['reserved address bits']++ ; continue }
+        }
 
         $ssid = ($r.$ssidCol -replace '"', '""')
         if ($ssid -match '[,"]') { $ssid = '"' + $ssid + '"' }
