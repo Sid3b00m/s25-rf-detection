@@ -122,6 +122,49 @@ lone router or a lone radio, which is usually a bus or a store.
 
 To undo, delete the two entries in **Watchlist & rules**.
 
+## Export to WiGLE
+
+RF Sentinel has no native WiGLE export, so [`csv-to-wigle.ps1`](csv-to-wigle.ps1) converts its
+CSV into the `WigleWifi-1.4` upload format.
+
+```powershell
+.\csv-to-wigle.ps1 .\rfsentinel_session.csv
+.\csv-to-wigle.ps1 .\rfsentinel_session.csv -Radio WiFi -OutFile wigle_upload.csv
+```
+
+Export from **Settings → Lists, tools & about**. Three scopes carry coordinates and convert;
+one does not:
+
+| Export scope | Converts? |
+|---|---|
+| All nearby devices — this scan | yes |
+| Match log only | yes |
+| Trip devices | yes |
+| All devices ever seen — history | **no — this CSV has no lat/lon at all** |
+
+The script auto-detects which one you handed it and refuses the history export with an
+explanation rather than writing a file full of blank coordinates.
+
+Two defaults worth knowing:
+
+**Randomized BLE addresses are dropped.** Anything whose `address_type` is not public is a
+rotating MAC that will never be seen again, so it is noise in a database keyed on MAC. Pass
+`-KeepRandomAddresses` to include them anyway.
+
+**Missing columns are left empty, not invented.** RF Sentinel does not record AuthMode, channel
+or altitude, so those stay blank — WiGLE accepts the rows but ranks sparse ones lower. The
+`distance_m` column is deliberately *not* mapped to `AccuracyMeters`: it is the estimated
+distance to the device, not GPS accuracy. If you know your accuracy, set it explicitly with
+`-AssumeAccuracyMeters 12`.
+
+A device heard on two radios is written as two observations, `W` for WiFi and `E` for BLE.
+
+**The camera pins are not yours to upload.** Those come from DeFlock's OpenStreetMap snapshot
+that the app downloaded — they are not RF observations, and the app cannot tell you that you
+personally saw any of them. Pushing them into WiGLE copies one database into another. If you
+spot a camera in the field, contribute it to [DeFlock](https://deflock.org) or OpenStreetMap,
+which is where RF Sentinel reads cameras from in the first place.
+
 ## Install over USB instead
 
 With USB debugging on and the phone plugged in, `install-to-s25.ps1` does all of the above
