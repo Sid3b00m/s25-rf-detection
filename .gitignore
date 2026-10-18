@@ -1,2 +1,4 @@
 # APKs are distributed as release assets, not committed to history
 *.apk
+ieee/
+oui-audit.csv

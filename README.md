@@ -77,6 +77,18 @@ Two more worth knowing about:
 OVERWATCH needs no setup — open it and press **START**. Its Waze source wants an `X-App-Token`
 in Settings; leave it unconfigured and use RF Sentinel's Waze integration instead.
 
+## Reference: what LE gear actually emits
+
+[`LEO-RF-CATALOG.md`](LEO-RF-CATALOG.md) catalogs law-enforcement and government surveillance
+equipment that radiates on WiFi and BLE, the identifiers a passive scanner can match, and the
+gear that emits nothing at all. Every MAC prefix in it was resolved against the IEEE registry
+during compilation; [`verify-ouis.ps1`](verify-ouis.ps1) reproduces the audit.
+
+Headline results: RF Sentinel's own database is **320 for 320 clean**, while the
+widely-copied `nite-oui-collection` law-enforcement list is **10 of 15 wrong** — its "Digital
+Ally" prefixes are Apple, its "Getac" prefixes are Dell and Xiaomi, and one "WatchGuard" prefix
+is Nintendo.
+
 ## Optional: boost Motorola and Cradlepoint
 
 [`watchlist-motorola-cradlepoint.json`](watchlist-motorola-cradlepoint.json) raises two vendors
