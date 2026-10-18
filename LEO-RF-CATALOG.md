@@ -100,32 +100,62 @@ The registrant is confirmed, but an OUI names a **company, not a product**. Trea
 ### ALPR and enforcement cameras
 
 `00:BF:15` / `0C:BF:15` / `00:50:C2:BE:70/36` Genetec · `00:50:C2:10:F0/36` + `70:B3:D5:88:A0/36`
-Perceptics · 11 × /36 Quercus · Tattile (10 × /24 + ~20 × /36) · `00:1D:4D` Adaptive Recognition ·
-`00:17:3D` Neology · `00:12:8E` Q-Free ASA · `00:40:DE` Elsag Datamat · `00:04:4C` + `48:E3:C3`
-Jenoptik · `98:6D:35:60/28` Vitronic · `00:18:29` Gatsometer · `00:30:7E` Redflex · `00:22:9F`
-Sensys Traffic · `00:24:AE` Idemia · `70:1A:D5` Avigilon Alta · `04:C3:E6:90/28` Ekin ·
-`00:E0:6A` Kapsch · `94:7B:BE` Ubicquia · `B4:1E:52` **Flock Safety — the only block registered
-to Flock**.
+Perceptics · Quercus 11 × /36 (`00:50:C2:C0:10`, `00:50:C2:FD:C0`, `70:B3:D5:03:D0`,
+`70:B3:D5:40:B0`, `70:B3:D5:4C:10`, `70:B3:D5:77:70`, `70:B3:D5:A1:20`, `70:B3:D5:FF:B0`,
+`8C:1F:64:9B:90`, `8C:1F:64:B9:A0`, `8C:1F:64:D7:C0`) · `00:1D:4D` Adaptive Recognition ·
+`00:17:3D` Neology · `00:12:8E` Q-Free ASA + `64:55:63` Q-Free America + `00:50:C2:81:60/36` ·
+`00:40:DE` Elsag Datamat · `70:B3:D5:52:10/36` + `70:B3:D5:F5:E0/36` **Selex ES** (ELSAG's
+predecessor and named as manufacturer on Leonardo's own price list — related, not proof) ·
+`00:04:4C` + `48:E3:C3` Jenoptik · `00:50:C2:82:30/36` Robot Visual Systems (Jenoptik traffic
+enforcement) · `98:6D:35:60/28` Vitronic · `00:18:29` Gatsometer · `00:30:7E` Redflex ·
+`00:22:9F` Sensys Traffic · `00:24:AE` Idemia · `70:1A:D5` Avigilon Alta · `04:C3:E6:90/28`
+Ekin · `00:E0:6A` Kapsch · `94:7B:BE` Ubicquia · `B4:1E:52` **Flock Safety — the only block
+registered to Flock**.
+
+**Tattile** holds ten full /24s (`00:00:A5`, `00:20:31`, `00:20:B3`, `00:40:75`, `00:40:8E`,
+`00:60:4F`, `00:80:46`, `00:90:43`, `00:90:8B`, `00:A0:80`) plus ~20 /36s — all verified to
+"Tattile SRL", but these are old, broad blocks and the company also makes industrial machine
+vision, so a hit is not necessarily an enforcement camera.
 
 No IEEE registration exists for Rekor, PlateSmart, RedSpeed, Conduent, Survision or Vysionics.
-None of these vendors holds a Bluetooth SIG company ID.
+None of these vendors holds a Bluetooth SIG company ID. There is no "Vigilant" registrant —
+Motorola's ALPR line sits under the generic Motorola Solutions blocks.
+
+### Roadside sensors
+
+`00:14:7B` Iteris · `50:0E:6D` TrafficCast International (pre-Iteris BlueTOAD units) · `00:0E:A5`
+BLIP Systems · `1C:C1:1A` Wavetronix · `1C:88:79:70/28` Sensys Networks. Read the
+[verified negatives](#verified-negatives) before using any of these — most do not transmit on a
+band you can hear, and the BlueTOAD family receives rather than beacons.
 
 ### Radios, vehicle gear, forensics
 
-`00:08:B8` E.F. Johnson · `00:0D:4F` Kenwood · `E0:DA:DC` JVC KENWOOD · `00:0D:CA` Tait
-Electronics · `8C:1F:64:A7:80/36` TAIT Global · `00:1E:96` Sepura · `C4:7C:8D:90/28` Airbus
+**Radios:** `00:08:B8` E.F. Johnson · `00:0D:4F` Kenwood · `E0:DA:DC` JVC KENWOOD · `00:0D:CA`
+Tait Electronics · `8C:1F:64:A7:80/36` TAIT Global · `00:1E:96` Sepura · `C4:7C:8D:90/28` Airbus
 DS-SLC · `28:FD:80:C0/28` Airbus DS Oy · `00:23:B9` Airbus DS Deutschland · `00:04:18` Teltronic
-S.A.U. · `00:0F:E3` Damm · `00:26:B3` Thales Communications · `00:12:E0` Codan · `00:14:91`
-Daniels/Codan · `00:E1:F8` BK Technologies · `00:30:44` + `00:E0:1C` CradlePoint · Peplink ×4 ·
-Sierra Wireless ×6 · Inseego ×5 · `00:1F:9C` Havis · `68:DA:73:B0/28` Gamber-Johnson ·
-`08:3C:03:00/28` Federal Signal SSG · `CC:69:B0` Global Traffic Technologies · `58:E8:76:C0/28`
-Kustom Signals · `1C:82:59:D0/28` Applied Concepts · `6C:18:11` Decatur Electronics · `00:16:00`
-Cellebrite · `70:B3:D5:71:F0/36` Grayshift · `00:50:C2:36:00/36` Digital Receiver Technology ·
-`00:50:C2:2A:50/36` Septier · `00:0D:1C` Amesys · `00:18:A6` Persistent Systems · `C4:7C:8D:A0/28`
-Silvus · `00:1E:3F` TrellisWare · `98:49:9F` Domo Tactical · `D4:11:D6` ShotSpotter ·
-`7C:83:34:40/28` + `84:B3:86:50/28` Fusus · `F8:B5:68:C0/28` 3SI · `00:14:7B` Iteris ·
-`00:0E:A5` BLIP Systems · `00:10:5D` + `00:30:E6` Draeger · `70:B3:D5:4E:F0/36` +
-`8C:1F:64:5A:20/36` CMI Inc (Intoxilyzer).
+S.A.U. · `00:0F:E3` Damm · `00:0E:06` Team Simoco + `00:1A:08` Simoco Ltd · `00:26:B3` Thales
+Communications (the US tactical-radio arm — Thales's other ~20 blocks are avionics, payments and
+rail) · `00:12:E0` Codan · `00:14:91` Daniels/Codan · `00:E1:F8` BK Technologies ·
+`00:00:C3` + `00:06:EC` + `00:17:F3` Harris Corporation (**pre-merger, covers decades of
+unrelated broadcast and avionics gear — effectively unusable**).
+
+**Vehicle:** `00:30:44` + `00:E0:1C` CradlePoint · Peplink ×4 · Sierra Wireless ×6 · Inseego ×5 ·
+`00:1F:9C` + `70:B3:D5:98:30/36` Havis · `68:DA:73:B0/28` Gamber-Johnson · `08:3C:03:00/28`
+Federal Signal SSG · `CC:69:B0` Global Traffic Technologies · Zebra 17 × MA-L · Brother 8 × MA-L.
+
+**Speed enforcement:** `58:E8:76:C0/28` Kustom Signals · `1C:82:59:D0/28` Applied Concepts ·
+`6C:18:11` Decatur Electronics.
+
+**Forensics and interception:** `00:16:00` Cellebrite · `70:B3:D5:71:F0/36` Grayshift ·
+`00:50:C2:36:00/36` Digital Receiver Technology · `00:50:C2:2A:50/36` Septier · `00:0D:1C` Amesys.
+
+**Tactical mesh:** `00:18:A6` Persistent Systems · `C4:7C:8D:A0/28` Silvus · `00:1E:3F`
+TrellisWare · `98:49:9F` Domo Tactical. All four run proprietary MANET waveforms — the blocks
+are real but a WiFi scanner will never see these on air.
+
+**Other:** `D4:11:D6` ShotSpotter · `7C:83:34:40/28` + `84:B3:86:50/28` Fusus · `F8:B5:68:C0/28`
+3SI · `00:10:5D` + `00:30:E6` Draeger · `70:B3:D5:4E:F0/36` + `8C:1F:64:5A:20/36` CMI Inc
+(Intoxilyzer — not present in any community list checked).
 
 ### Default SSID patterns worth matching
 
@@ -191,6 +221,9 @@ vehicle as police equipment.
 | `54:02:37` | Teltronic **AG**, Switzerland | Unconfirmed whether same entity as Teltronic S.A.U. — treat as unverified |
 | `24:A3:F0:7`, `00:1B:C5:0B4` | COBAN SRL, Italy | Coban Technologies (US in-car video) |
 | `0x0D46` | Thales **Simulation & Training** | Thales tactical radio |
+| `0x0008` + `0xFC7C`, 122 MAC blocks | Motorola **Mobility** (Lenovo-owned) | Motorola **Solutions**. Matching Mobility flags every Moto phone on the street |
+| every "Fortinet" hit | Fortinet (firewalls) | Fortin Electronic Systems (`0xFDE1`/`0xFDCA`) |
+| `00:10:51` CMICRO, `50:3F:98` CMITECH | unrelated | CMI, Inc. (Intoxilyzer) |
 
 ### Chipset and module makers
 
