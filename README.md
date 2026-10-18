@@ -52,6 +52,31 @@ service in the background; RF Sentinel's own settings screen has a shortcut to i
 RF Sentinel's floating threat bubble and mini map additionally need
 **Appear on top** / **Display over other apps**.
 
+## Setting the apps up
+
+RF Sentinel opens a setup wizard on first launch — theme, region, alerts and voice, floating
+bubble, car auto-start, camera warnings, cell alerts, camera radius, permissions. Then tap
+**Start**.
+
+Several detection categories ship **off by default**. Turn on the ones you want in Settings:
+
+- Police aircraft (ADS-B)
+- Waze reports
+- Hacking tools (Flipper Zero, Pineapple, deauth attacks, evil twins)
+- Action and hidden cameras (GoPro, Insta360, WiFi spy cams in setup mode)
+- Network cameras (Ring, Arlo, Wyze, Verkada, Axis)
+
+Two more worth knowing about:
+
+- **Cell tower change alert** (Settings) — tells you each time the phone moves to a different
+  serving tower. A change while you are parked is a classic fake-tower sign.
+- **Offline camera prefetch** — downloads mapped ALPR, speed and red-light cameras for a radius
+  you pick (10–200 km), or every mapped Flock camera in the US and Canada. Worth doing once on
+  WiFi so camera warnings work without a data connection.
+
+OVERWATCH needs no setup — open it and press **START**. Its Waze source wants an `X-App-Token`
+in Settings; leave it unconfigured and use RF Sentinel's Waze integration instead.
+
 ## Install over USB instead
 
 With USB debugging on and the phone plugged in, `install-to-s25.ps1` does all of the above
