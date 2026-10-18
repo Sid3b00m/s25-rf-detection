@@ -77,6 +77,35 @@ Two more worth knowing about:
 OVERWATCH needs no setup — open it and press **START**. Its Waze source wants an `X-App-Token`
 in Settings; leave it unconfigured and use RF Sentinel's Waze integration instead.
 
+## Optional: boost Motorola and Cradlepoint
+
+[`watchlist-motorola-cradlepoint.json`](watchlist-motorola-cradlepoint.json) raises two vendors
+that ship below RF Sentinel's alert threshold. Download it on the phone, then in the app open
+**Watchlist & rules → menu → Import entries (JSON)**.
+
+| Rule | Stock | Boosted | Effect |
+|---|---|---|---|
+| `vendor:Motorola Solutions` | 45 | **55** | Crosses into "probable", so it alerts at the default threshold |
+| `vendor:Cradlepoint` | 35 | **45** | Still below 50 — stays amber, only corroborates |
+
+A `vendor:` rule matches the IEEE registrant *or* the Bluetooth company, so the single Motorola
+rule covers both the BLE side (company ID `0x04EC`) and all seven WiFi blocks at once. It is
+scoped to "Motorola Solutions" on purpose: a bare `vendor:Motorola` would also match Motorola
+Mobility and flag every Moto phone near you.
+
+**This will produce false positives.** In the field capture behind RF Sentinel's signatures, all
+27 of 27 hits on Motorola WiFi prefixes turned out not to be body cams — in North America those
+blocks are mostly radio infrastructure and commercial gear. The stock scores are low on evidence,
+not caution.
+
+Note that neither vendor needs boosting for the case that actually matters. Both already feed the
+patrol-vehicle grouping engine, where Cradlepoint carries the "vehicle cellular router" role and
+Motorola carries "two-way radio". Two different roles whose signal strength rises and falls
+together score 24 + 12x2 + 10 = **58**, which alerts today with no changes. What stays silent is a
+lone router or a lone radio, which is usually a bus or a store.
+
+To undo, delete the two entries in **Watchlist & rules**.
+
 ## Install over USB instead
 
 With USB debugging on and the phone plugged in, `install-to-s25.ps1` does all of the above

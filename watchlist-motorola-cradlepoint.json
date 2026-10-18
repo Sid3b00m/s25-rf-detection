@@ -1,0 +1,18 @@
+[
+  {
+    "prefix": "vendor:Motorola Solutions",
+    "label": "Motorola Solutions - P25/TETRA radio, VB400 body cam, in-car gear",
+    "source": "Boosted from the stock score of 45. One vendor rule covers both radios: the Bluetooth company ID 0x04EC and all seven IEEE WiFi blocks (00:1F:92, 4C:CC:34, 00:18:85, 00:04:7D, 10:74:6F, B8:E2:8C, 9C:86:2B). Scoped to 'Motorola Solutions' so it does not match Motorola Mobility consumer phones.",
+    "confidence": "custom",
+    "score": 55,
+    "category": "PUBLIC_SAFETY"
+  },
+  {
+    "prefix": "vendor:Cradlepoint",
+    "label": "Cradlepoint vehicle cellular router",
+    "source": "Boosted from the stock score of 35 (blocks 00:30:44, 00:E0:1C). Deliberately left below the 50 alert threshold: Cradlepoint routers are common on transit buses and in retail stores, so this stays amber unless it corroborates another hit or joins a patrol-vehicle group.",
+    "confidence": "custom",
+    "score": 45,
+    "category": "PUBLIC_SAFETY"
+  }
+]
