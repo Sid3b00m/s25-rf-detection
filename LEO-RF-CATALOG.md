@@ -61,15 +61,13 @@ while an OUI names whoever made the radio module. It also survives MAC randomiza
 | `0x0A45` | 3SI Security Systems | Covert bait trackers — the best covert-tracker identifier that exists |
 | `0x025F` | Yardarm Technologies | Holster Aware sensor (supports beacon mode) |
 | `0x04BC` | Draegerwerk | Roadside breath/drug screening |
-| `0x01F1` | Zebra Technologies | In-car printers |
-| `0x0755` | Brother Industries | In-car printers |
 | `0x0D98` | E.F. Johnson | P25 radios |
 | `0x088F` | Tait International | Radios |
 | `0x0145` | Novatel Wireless | Vehicle routers |
 
 Service UUIDs: `0xFC81` (Axon Enterprise), `0xFE6B`/`0xFE6C` (TASER), `0xFD8E`/`0xFE04`
-(Motorola Solutions), `0xFE79`/`0xFD66` (Zebra), `0xFDE1`/`0xFDCA` (Fortin), `0xFCDA` (Draeger),
-`0xFDA3`/`0xFDA4` (Inseego).
+(Motorola Solutions), `0xFDE1`/`0xFDCA` (Fortin), `0xFCDA` (Draeger), `0xFDA3`/`0xFDA4`
+(Inseego).
 
 ---
 
@@ -141,7 +139,10 @@ unrelated broadcast and avionics gear — effectively unusable**).
 
 **Vehicle:** `00:30:44` + `00:E0:1C` CradlePoint · Peplink ×4 · Sierra Wireless ×6 · Inseego ×5 ·
 `00:1F:9C` + `70:B3:D5:98:30/36` Havis · `68:DA:73:B0/28` Gamber-Johnson · `08:3C:03:00/28`
-Federal Signal SSG · `CC:69:B0` Global Traffic Technologies · Zebra 17 × MA-L · Brother 8 × MA-L.
+Federal Signal SSG · `CC:69:B0` Global Traffic Technologies.
+
+In-car receipt and citation printers (Zebra, Brother) are **not listed here** — see
+[Printers](#printers-removed-from-the-alerting-tiers).
 
 **Speed enforcement:** `58:E8:76:C0/28` Kustom Signals · `1C:82:59:D0/28` Applied Concepts ·
 `6C:18:11` Decatur Electronics.
@@ -269,10 +270,41 @@ registrants. Observed during verification:
 
 ---
 
+## Printers, removed from the alerting tiers
+
+Zebra and Brother are genuinely used for in-car citation and receipt printing, and their
+identifiers are real: Zebra holds 17 MA-L blocks and SIG company ID `0x01F1` with service UUIDs
+`0xFE79`/`0xFD66`; Brother holds 8 MA-L blocks and `0x0755`. They are listed here and nowhere
+else in this document, because as an alerting signal they are worse than useless.
+
+The base rates are not close. Zebra is the dominant label-printer vendor in retail, warehousing
+and logistics; Brother is an office printer company. Essentially every Zebra radio you will ever
+hear belongs to a shop, a stockroom or a delivery depot. The handful bolted into patrol cars are
+lost in that noise by orders of magnitude.
+
+What makes this more than a scoring nitpick is that **a printer can help form a patrol-vehicle
+group**. RF Sentinel derives a device's cluster role from the IEEE vendor string, and
+`Regex("zebra|ruggedjet|pocketjet")` maps to the role `mobile printer`. Two distinct roles that
+move together score 24 + 12×2 + 10 = 58, which is over the alert threshold. So a Zebra printer
+and a Cradlepoint router sitting in the same building — a completely ordinary retail pairing —
+can read as a patrol vehicle.
+
+The upstream code already has the right mechanism for this. `SUPPORT_ROLES` exists for exactly
+this problem, described as *"makers whose products are mostly civilian... so an office or a
+driveway full of them never reads as a police vehicle"*, and it currently holds the
+impairment-screening and vehicle-interface roles. A device with only support roles cannot form a
+group alone. **`mobile printer` belongs in that set and is not in it.** Dräger breathalysers,
+which are far more police-specific than a label printer, are already treated that way.
+
+Until that changes upstream, a Zebra or Brother hit should be read as *"someone nearby owns a
+printer"*.
+
+---
+
 ## Dual-use vendors that must never alert alone
 
 Cradlepoint (transit buses, retail), Sierra Wireless (utility fleets, kiosks), Peplink (RVs,
-marine), Inseego (consumer MiFi), Zebra (warehouses), Brother (offices), Panasonic (projectors,
+marine), Inseego (consumer MiFi), Panasonic (projectors,
 appliances), Dell (~170 blocks), JVCKENWOOD (car audio), Dräger (hospitals, industrial gas),
 Hytera (commercial DMR), Fortin (civilian remote starters), Motorola Solutions (retail and venue
 staff radios).
