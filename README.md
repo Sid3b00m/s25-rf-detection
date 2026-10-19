@@ -122,6 +122,54 @@ lone router or a lone radio, which is usually a bus or a store.
 
 To undo, delete the two entries in **Watchlist & rules**.
 
+## Custom theme
+
+[rf-sentinel-theme-fsociety.json](../../releases/download/v1/rf-sentinel-theme-fsociety.json) is
+a ready-made theme with the code-rain banner already embedded — download it on the phone, then
+**Theme maker → Import**, and tick the parts you want.
+
+| Setting | Value |
+|---|---|
+| Accent | `#00E676` phosphor green |
+| Scheme / mode | Vivid, pure black (OLED) |
+| Font | Share Tech Mono (the DedSec look) |
+| Header | fsociety |
+| Banner | `banner-glitch.jpg`, embedded in the file |
+
+### Two things the theme system cannot do
+
+**You can't remove or rename the header wordmark.** On the Glitch and fsociety headers the
+wordmark is a hardcoded `RF_SENTINEL` bitmap, and those two styles ignore the theme's `title`
+field completely. The other seven styles do honour `title` — but they don't draw the banner at
+all. So a banner and a custom title are mutually exclusive, whichever way you go.
+
+**The Glitch and fsociety header art is a fixed palette, not your accent.** fsociety draws in red
+(`#C8221A`) with *"HELLO, FRIEND"* and a `fsociety.dat` terminal; Glitch draws in DedSec blue
+(`#0070F0`) with *"WE ARE DEDSEC"* and `rf_sentinel.exe`. Your accent colour drives the rest of
+the app — buttons, highlights, list accents, the palette the whole UI derives from — but it does
+not recolour those two headers.
+
+### Rolling your own
+
+The file is plain JSON, so you can hand-edit it. The app validates on import and silently falls
+back to defaults for anything it doesn't recognise, so the allowed values matter:
+
+| Field | Allowed |
+|---|---|
+| `accent` | Signed 32-bit ARGB int, alpha forced opaque |
+| `scheme` | `tonal` `vibrant` `neutral` `expressive` `content` `fidelity` `monochrome` `rainbow` `fruit` |
+| `mode` | `system` `light` `dark` `black` |
+| `font` | `default` `medium` `light` `condensed` `serif` `mono` `serif-mono` `casual` `cursive` `tech` `file` |
+| `header` | `GLITCH` `FSOCIETY` `HUD` `NIGHT_VISION` `CRT` `SUNSET` `STENCIL` `BLUEPRINT` `MASTHEAD` |
+| `title` | ≤ 40 chars, ignored by `GLITCH`/`FSOCIETY` |
+| `markerStyle` | `navigation` `dot` `arrow` `chevron` `sedan` `hatchback` `wagon` `suv` `pickup` `sports` `racer` `convertible` `mini` `van` `truck` `taxi` `motorcycle` |
+| `markerColor` | `red` `orange` `yellow` `gold` `lime` `green` `teal` `cyan` `blue` `navy` `purple` `pink` `white` |
+| `markerSize` | 0.6 to 2.0 |
+
+The wrapper must be exactly `{"app":"RF Sentinel","type":"theme","format":1,...}` or the import
+is rejected. `assets.banner` is the image base64-encoded, capped at 4 MB decoded; the whole file
+is capped around 14 MB.
+
 ## Theme banners
 
 Open on the phone and tap one, then in RF Sentinel go to **Theme maker**, set the header style
