@@ -122,6 +122,44 @@ lone router or a lone radio, which is usually a bus or a store.
 
 To undo, delete the two entries in **Watchlist & rules**.
 
+## Watcher RF — the rebranded build
+
+[**WatcherRF-v2.25.1-foss-release.apk**](../../releases/download/watcher-v2.25.1/WatcherRF-v2.25.1-foss-release.apk)
+is RF Sentinel 2.25.1 rebuilt from source with the branding compiled in, so there is no theme to
+import and nothing to configure.
+
+```
+a41a5f01a63ab7d631d8edae5bd19824ce50832bd068b91bdda5ba8f84c53577  WatcherRF-v2.25.1-foss-release.apk
+```
+
+**It installs alongside the official app.** The package ID is `com.rfsentinel.app.watcher`
+rather than `com.rfsentinel.app`, so the two coexist and the official build stays updatable from
+upstream. You do not have to uninstall anything.
+
+| Baked in | |
+|---|---|
+| App name | Watcher RF |
+| Launcher icon | New adaptive icon, phosphor green on near-black |
+| Default theme | Watcher RF — `#00E676` on `#040604`, Share Tech Mono |
+| Header | Code-rain art bundled as a drawable, wordmark `WATCHER_RF` |
+| Base version | Upstream 2.25.1, including the issue #3 patrol-grouping fix |
+
+It is also **newer than the official APK above**, which is still 2.24.0. The 2.25.1 release is
+the one that fixes the printer false positive described in
+[Printers](LEO-RF-CATALOG.md#printers-removed-from-the-alerting-tiers).
+
+### Source
+
+RF Sentinel is GPL-3.0, so redistributing a modified binary obliges me to publish the matching
+source. The complete tree is attached to the release as `WatcherRF-v2.25.1-source.zip`, and
+[`watcher-rf.patch`](watcher-rf.patch) is the diff against upstream commit `d317888`. Seven
+files differ; everything else is untouched.
+
+Build it with `./gradlew assembleFossRelease`. You will need your own `keystore.properties` —
+mine is not in the archive, and the APK above is signed with a key that exists only on my
+machine. That also means it can never receive an update from upstream: a new Watcher RF build
+has to come from here.
+
 ## Custom theme
 
 [rf-sentinel-theme-fsociety.json](../../releases/download/v1/rf-sentinel-theme-fsociety.json) is
