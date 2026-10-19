@@ -122,6 +122,28 @@ lone router or a lone radio, which is usually a bus or a store.
 
 To undo, delete the two entries in **Watchlist & rules**.
 
+## Theme banners
+
+Open on the phone and tap one, then in RF Sentinel go to **Theme maker**, set the header style
+to **Glitch** or **fsociety**, and add it as the banner picture.
+
+| Banner | Style |
+|---|---|
+| [banner-spectrum.jpg](../../releases/download/v1/banner-spectrum.jpg) | Cyan RF waveform with radar arcs |
+| [banner-cameras.jpg](../../releases/download/v1/banner-cameras.jpg) | Amber-to-red surveillance cameras |
+| [banner-glitch.jpg](../../releases/download/v1/banner-glitch.jpg) | Green code rain, CRT tears |
+
+**The header style matters.** The banner is only drawn by the `Glitch` and `fsociety` headers —
+the other seven (HUD, Night vision, CRT, Sunset, Stencil, Blueprint, Masthead) ignore it, so the
+picture silently will not appear. The header growing from 125dp to 190dp tall is how you know it
+took.
+
+If you make your own: keep it under **4 MB**, which is a hard limit rather than a resize
+threshold, and make it wide — it is centre-cropped to roughly 1080x570 on an S25, not squashed.
+Keep the subject in the **top third**, because a gradient fades the lower part to black so the
+wordmark and terminal text stay readable. High-contrast graphics beat photos, since those two
+headers slice and offset the banner during the glitch animation.
+
 ## Export to WiGLE
 
 RF Sentinel has no native WiGLE export, so [`csv-to-wigle.ps1`](csv-to-wigle.ps1) converts its
