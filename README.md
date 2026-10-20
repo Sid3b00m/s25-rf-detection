@@ -140,12 +140,12 @@ Three separate things keep it quiet, and fixing only one will not help:
 
 ## Watcher RF — the rebranded build
 
-[**WatcherRF-v2.25.1-w2-foss-release.apk**](../../releases/download/watcher-v2.25.1-w2/WatcherRF-v2.25.1-w2-foss-release.apk)
+[**WatcherRF-v2.25.1-w3-foss-release.apk**](../../releases/download/watcher-v2.25.1-w3/WatcherRF-v2.25.1-w3-foss-release.apk)
 is RF Sentinel 2.25.1 rebuilt from source with the branding and the Motorola/Cradlepoint rules
 compiled in, so there is no theme and no watchlist to import, and nothing to configure.
 
 ```
-65fec22672bc4067367a28fbf3787744f09781995ff45630938f229e64f9c295  WatcherRF-v2.25.1-w2-foss-release.apk
+b619006afd5c2980240f541b4a80ec850e892d42001b3f445fad8226c7117910  WatcherRF-v2.25.1-w3-foss-release.apk
 ```
 
 **It installs alongside the official app.** The package ID is `com.rfsentinel.app.watcher`
@@ -161,6 +161,23 @@ upstream. You do not have to uninstall anything.
 | Watchlist | `vendor:Motorola Solutions` at 55 and `vendor:Cradlepoint` at 45, added to the `global` preset |
 | Base version | Upstream 2.25.1, including the issue #3 patrol-grouping fix |
 
+### Which devices it runs on
+
+One universal APK, nothing to pick:
+
+| | |
+|---|---|
+| Android | 8.0 (API 26) through 16 (API 36) |
+| CPU | `arm64-v8a`, `armeabi-v7a`, `x86`, `x86_64` |
+| Screens | densities 120–640, small through xlarge |
+| Google services | none — the FOSS flavour, no Play Services, no Mapbox |
+
+Upstream release builds are ARM-only; this one keeps the x86 libraries as well, so the same file
+installs in an emulator or on an x86 Chromebook. That is what makes it 43 MB rather than 27 MB —
+MapLibre's renderer is roughly 10–13 MB per CPU type. Every hardware feature except plain
+Bluetooth is declared `not-required`, so a device without WiFi scanning, GPS, telephony or USB
+host is not blocked from installing.
+
 The two vendor rules are the same ones described under
 [Optional: boost Motorola and Cradlepoint](#optional-boost-motorola-and-cradlepoint), including
 the false-positive warning — Motorola at 55 will alert, and in the field capture behind the
@@ -174,7 +191,7 @@ the one that fixes the printer false positive described in
 ### Source
 
 RF Sentinel is GPL-3.0, so redistributing a modified binary obliges me to publish the matching
-source. The complete tree is attached to the release as `WatcherRF-v2.25.1-w2-source.zip`, and
+source. The complete tree is attached to the release as `WatcherRF-v2.25.1-w3-source.zip`, and
 [`watcher-rf.patch`](watcher-rf.patch) is the diff against upstream commit `d317888`. Eight
 files are modified and six are added (the header art and five icon densities); everything else
 is untouched.
