@@ -95,6 +95,9 @@ is Nintendo.
 
 ## Optional: boost Motorola and Cradlepoint
 
+**Watcher RF has these compiled in since `2.25.1-w2` — skip this section if you are running it.**
+This is for the official RF Sentinel build.
+
 [`watchlist-motorola-cradlepoint.json`](watchlist-motorola-cradlepoint.json) raises two vendors
 that ship below RF Sentinel's alert threshold. Download it on the phone, then in the app open
 **Watchlist & rules → menu → Import entries (JSON)**.
@@ -122,14 +125,27 @@ lone router or a lone radio, which is usually a bus or a store.
 
 To undo, delete the two entries in **Watchlist & rules**.
 
+### If Motorola never shows up at all
+
+Three separate things keep it quiet, and fixing only one will not help:
+
+- **The bundled presets contain no `vendor:` rules.** Not one, in any of the nine region files,
+  and nothing anywhere references Bluetooth company `0x04EC`. Motorola BLE is therefore *named*
+  correctly in the UI — `bt_company.tsv` does map `04EC` — but never scored. Only a `vendor:`
+  rule, imported or baked in, changes that.
+- **The MAC rules score 45, under the default alert threshold of 50.** They are matching; they
+  are just not loud enough to surface.
+- **Watchlists do not cross package IDs.** Watcher RF is `com.rfsentinel.app.watcher`, so
+  anything you imported into the official app lives in different storage and does not carry over.
+
 ## Watcher RF — the rebranded build
 
-[**WatcherRF-v2.25.1-foss-release.apk**](../../releases/download/watcher-v2.25.1/WatcherRF-v2.25.1-foss-release.apk)
-is RF Sentinel 2.25.1 rebuilt from source with the branding compiled in, so there is no theme to
-import and nothing to configure.
+[**WatcherRF-v2.25.1-w2-foss-release.apk**](../../releases/download/watcher-v2.25.1-w2/WatcherRF-v2.25.1-w2-foss-release.apk)
+is RF Sentinel 2.25.1 rebuilt from source with the branding and the Motorola/Cradlepoint rules
+compiled in, so there is no theme and no watchlist to import, and nothing to configure.
 
 ```
-a41a5f01a63ab7d631d8edae5bd19824ce50832bd068b91bdda5ba8f84c53577  WatcherRF-v2.25.1-foss-release.apk
+65fec22672bc4067367a28fbf3787744f09781995ff45630938f229e64f9c295  WatcherRF-v2.25.1-w2-foss-release.apk
 ```
 
 **It installs alongside the official app.** The package ID is `com.rfsentinel.app.watcher`
@@ -142,7 +158,14 @@ upstream. You do not have to uninstall anything.
 | Launcher icon | New adaptive icon, phosphor green on near-black |
 | Default theme | Watcher RF — `#00E676` on `#040604`, Share Tech Mono |
 | Header | Code-rain art bundled as a drawable, wordmark `WATCHER_RF` |
+| Watchlist | `vendor:Motorola Solutions` at 55 and `vendor:Cradlepoint` at 45, added to the `global` preset |
 | Base version | Upstream 2.25.1, including the issue #3 patrol-grouping fix |
+
+The two vendor rules are the same ones described under
+[Optional: boost Motorola and Cradlepoint](#optional-boost-motorola-and-cradlepoint), including
+the false-positive warning — Motorola at 55 will alert, and in the field capture behind the
+stock scores, 27 of 27 hits on those WiFi prefixes were not body cams. To tone it down, edit or
+delete the entry in **Watchlist & rules**; the baked-in rules are ordinary preset entries.
 
 It is also **newer than the official APK above**, which is still 2.24.0. The 2.25.1 release is
 the one that fixes the printer false positive described in
@@ -151,9 +174,10 @@ the one that fixes the printer false positive described in
 ### Source
 
 RF Sentinel is GPL-3.0, so redistributing a modified binary obliges me to publish the matching
-source. The complete tree is attached to the release as `WatcherRF-v2.25.1-source.zip`, and
-[`watcher-rf.patch`](watcher-rf.patch) is the diff against upstream commit `d317888`. Seven
-files differ; everything else is untouched.
+source. The complete tree is attached to the release as `WatcherRF-v2.25.1-w2-source.zip`, and
+[`watcher-rf.patch`](watcher-rf.patch) is the diff against upstream commit `d317888`. Eight
+files are modified and six are added (the header art and five icon densities); everything else
+is untouched.
 
 Build it with `./gradlew assembleFossRelease`. You will need your own `keystore.properties` —
 mine is not in the archive, and the APK above is signed with a key that exists only on my
