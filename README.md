@@ -1,10 +1,12 @@
 # RF Sentinel on the Galaxy S25
 
-A verified mirror of RF Sentinel, a no-root Android counter-surveillance scanner, plus a script
-that installs it over adb and applies the permissions and battery settings it needs.
+A verified mirror of RF Sentinel, a no-root Android counter-surveillance scanner, plus
+**Watcher RF** — the same app rebuilt from source with the branding and the Motorola/Cradlepoint
+rules compiled in — and a script that installs either over adb with the permissions and battery
+settings they need.
 
-Nothing here is original work. The APK is the unmodified official release build —
-see [Sources and licences](#sources-and-licences).
+The detection engine is not original work: it is RF Sentinel's, unmodified. See
+[Sources and licences](#sources-and-licences).
 
 > **Install one app, not two.** This repo originally mirrored OVERWATCH alongside RF Sentinel.
 > That was redundant: every OVERWATCH data source is already in RF Sentinel, usually in a fuller
@@ -13,17 +15,27 @@ see [Sources and licences](#sources-and-licences).
 
 ## Download to the phone
 
-Open this page in the phone's browser and tap the link:
+Open this page in the phone's browser and tap a link. **The APKs are release assets, so they
+are not in the file list above** — these links, or the
+[Releases page](../../releases), are the only places they appear.
 
-| App | Download | Size |
-|---|---|---|
-| RF Sentinel 2.24.0 | [RFSentinel-v2.24.0-release.apk](../../releases/download/v1/RFSentinel-v2.24.0-release.apk) | 48 MB |
+| App | Download | Size | |
+|---|---|---|---|
+| **Watcher RF 2.25.1-w3** | [**WatcherRF-v2.25.1-w3-foss-release.apk**](../../releases/download/watcher-v2.25.1-w3/WatcherRF-v2.25.1-w3-foss-release.apk) | 43 MB | Start here |
+| RF Sentinel 2.24.0 | [RFSentinel-v2.24.0-release.apk](../../releases/download/v1/RFSentinel-v2.24.0-release.apk) | 48 MB | The stock app, older |
 
-Byte-identical to the upstream release:
+Take **Watcher RF** unless you specifically want the official build. It is newer (2.25.1 vs
+2.24.0), it has the Motorola and Cradlepoint rules already baked in, and it runs on any device
+— see [Watcher RF](#watcher-rf--the-rebranded-build). The two install side by side, so you can
+have both.
 
 ```
+b619006afd5c2980240f541b4a80ec850e892d42001b3f445fad8226c7117910  WatcherRF-v2.25.1-w3-foss-release.apk
 542a3d256f390657bbd5e01a62e0775852bc4df428415ba3fdc2d59d66be086c  RFSentinel-v2.24.0-release.apk
 ```
+
+The RF Sentinel APK is byte-identical to upstream's release. Watcher RF is built from source;
+its signature is mine, not upstream's.
 
 ## Before you install: turn off Auto Blocker
 
